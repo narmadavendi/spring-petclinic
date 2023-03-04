@@ -1,5 +1,6 @@
 pipeline {
     agent { label 'ubuntu1' }
+    tools { jdk 'jdk_17'}
     stages {
         stage ('vcs') {
             steps {

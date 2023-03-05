@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent ubuntu1
     stages {
         stage ('vcs') {
             steps {

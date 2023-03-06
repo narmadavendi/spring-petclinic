@@ -34,33 +34,32 @@ pipeline {
         always{
             echo "Build is Completed"
             mail to: 'namobuddhay398@gmail.com',
-                 body: 'This is about job status',
-                 subject: """
-                             Job is Completed for build_number:$env.BUILD_NUMBER
-                             Job is completed for job_name:$env.JOB_NAME
-                             Job is completed for node_name:$env.NODE_NAME
-                            """ 
+                 subject: 'This is about job status' 
+                 body: """Job is Completed for build_number:$env.BUILD_NUMBER
+                          Job is completed for job_name:$env.JOB_NAME
+                          Job is completed for node_name:$env.NODE_NAME
+                            """
         }
         failure{
             echo "Build is Failed"
             mail to: 'namobuddhay398@gmail.com',
-                 body: 'This is about job status',
-                 subject: """
+                 subject: 'This is about job status', 
+                 body: """
                              Job is Failed for $env.BUILD_NUMBER
                              Job is Failed for $env.JOB_NAME
                              Job is Failed for $env.NODE_NAME
-                            """ 
+                            """  
         }
         success{
             echo "Build is Success so testing for junit reports"
             junit '**/surefire-reports/*.xml'
             mail to: 'namobuddhay398@gmail.com',
-                 body: 'This is about job status',
-                 subject: """
+                 body:  """
                              Job is Success for $env.BUILD_NUMBER
                              Job is Success for $env.JOB_NAME
                              Job is Success for $env.NODE_NAME
-                        """ 
+                        """ ,
+                 subject: 'This is about job status'
         }
     }
 }

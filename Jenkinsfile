@@ -20,7 +20,7 @@ pipeline {
         }
         stage ('post build') {
             steps {
-                archiveArtifacts artifacts: '**/target/*.jar', 
+                archiveArtifacts artifacts: '**/target/*.jar'
             }
         }
         stage('junit'){

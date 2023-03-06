@@ -14,9 +14,9 @@ pipeline {
         }
         stage ('package') {
             steps {
-                sh """export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH
-                      mvn clean package sonar:sonar
-                    """  
+                withSonarQubeEnv('My SonarQube Server') {
+                sh 'mvn clean package sonar:sonar'
+              }
             }
         }
         stage ('post build') {

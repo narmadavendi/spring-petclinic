@@ -2,6 +2,9 @@ pipeline {
     agent {
         label 'ubuntu1'
     }
+    triggers{
+        pollSCM('* * * * *')
+    }
     stages {
         stage ('vcs') {
             steps {
@@ -17,8 +20,12 @@ pipeline {
         }
         stage ('post build') {
             steps {
-                archiveArtifacts artifacts: 'target/*.jar',
-                junit testResults: '**/surefire-reports/*.xml'
+                archiveArtifacts artifacts: '**/target/*.jar', 
+            }
+        }
+        stage('junit'){
+            steps{
+                junit '**/surefire-reports/*.xml'
             }
         }
     }

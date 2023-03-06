@@ -14,8 +14,9 @@ pipeline {
         }
         stage ('package') {
             steps {
-                sh 'export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH',
-                sh './mvnw package'
+                sh """export PATH=/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH
+                      ./mvnw package
+                    """  
             }
         }
         stage ('post build') {

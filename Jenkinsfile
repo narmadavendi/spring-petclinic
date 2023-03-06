@@ -1,21 +1,26 @@
 pipeline {
     agent {
-        label 'ubuntu1'
+        label "${params.label}"
     }
     triggers{
         pollSCM('* * * * *')
     }
+    parameters{
+        choice(name: 'Branch_Name', choices: ['main', 'test', 'dev'], description: 'selecting branch to build')
+        choice(name: 'label', choices: ['ubuntu1', 'ubuntu2', 'ubuntu3'], description: 'selecting label')
+        string(name: 'maven_goal', defaultValue: 'clean', description: 'selecting maven goal')
+    }
     stages {
         stage ('vcs') {
             steps {
-                git branch: 'main',
+                git branch: "${params.Branch_Name}",
                     url: 'https://github.com/spring-projects/spring-petclinic.git' 
             }
         }
         stage ('package') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh 'mvn clean package sonar:sonar'
+                    sh "mvn  ${params.maven_goal} sonar:sonar"
                 }
             }
         }
@@ -24,17 +29,12 @@ pipeline {
                 archiveArtifacts artifacts: '**/target/*.jar'
             }
         }
-        stage('junit'){
-            steps{
-                junit '**/surefire-reports/*.xml'
-            }
-        }
     }
     post{
         always{
             echo "Build is Completed"
-            mail to: 'namobuddhay398@gmail.com'
-                 body: 'This is about job status'
+            mail to: 'namobuddhay398@gmail.com',
+                 body: 'This is about job status',
                  subject: """
                              Job is Completed for build_number:$env.BUILD_NUMBER
                              Job is completed for job_name:$env.JOB_NAME
@@ -43,8 +43,8 @@ pipeline {
         }
         failure{
             echo "Build is Failed"
-            mail to: 'namobuddhay398@gmail.com'
-                 body: 'This is about job status'
+            mail to: 'namobuddhay398@gmail.com',
+                 body: 'This is about job status',
                  subject: """
                              Job is Failed for $env.BUILD_NUMBER
                              Job is Failed for $env.JOB_NAME
@@ -52,14 +52,15 @@ pipeline {
                             """ 
         }
         success{
-            echo "Build is Success"
-            mail to: 'namobuddhay398@gmail.com'
-                 body: 'This is about job status'
+            echo "Build is Success so testing for junit reports"
+            junit '**/surefire-reports/*.xml'
+            mail to: 'namobuddhay398@gmail.com',
+                 body: 'This is about job status',
                  subject: """
                              Job is Success for $env.BUILD_NUMBER
                              Job is Success for $env.JOB_NAME
                              Job is Success for $env.NODE_NAME
-                            """ 
+                        """ 
         }
     }
 }

@@ -29,14 +29,41 @@ pipeline {
                 archiveArtifacts artifacts: '**/target/*.jar'
             }
         }
+        stage ('Artifactory configuration') {
+            steps {
+                    rtMavenDeployer (
+                    id: "jfrog-deployer-id",
+                    serverId: "jfrog-server-id",
+                    releaseRepo: "libs-release-local",
+                    snapshotRepo: "libs-snapshot-local"
+                )
+            }
+        }
+        stage ('Exec Maven') {
+            steps {
+                rtMavenRun (
+                    tool: 'maven', // Tool name from Jenkins configuration
+                    pom: 'pom.xml',
+                    goals: "${params.maven_goal}",
+                    deployerId: "jfrog-deployer-id"
+                )
+            }
+        }
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "jfrog-server-id"
+                )
+            } 
+        }
     }
     post{
         always{ 
             echo "Build is Completed"
             mail to: 'namobuddhay398@gmail.com',
                  body: """Job is Completed for build_number:$env.BUILD_NUMBER
-                          Job is completed for job_name:$env.JOB_NAME
-                          Job is completed for node_name:$env.NODE_NAME
+                          \n Job is completed for job_name:$env.JOB_NAME
+                          \n Job is completed for node_name:$env.NODE_NAME
                         """ ,
                  subject: 'This is about job status'
         }

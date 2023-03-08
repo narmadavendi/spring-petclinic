@@ -1,0 +1,6 @@
+all:
+  children:
+    ubuntu:
+      hosts:
+        172.31.43.1
+        

@@ -1,23 +1,27 @@
 pipeline {
-    agent {
-        label "${params.label}"
-    }
+    agent none
     triggers{
         pollSCM('* * * * *')
     }
     parameters{
         choice(name: 'Branch_Name', choices: ['main', 'test', 'dev'], description: 'selecting branch to build')
-        choice(name: 'label', choices: ['ubuntu1', 'ubuntu2', 'ubuntu3'], description: 'selecting label')
+        /* choice(name: 'label', choices: ['ubuntu1', 'ubuntu2', 'ubuntu3'], description: 'selecting label')*/
         string(name: 'maven_goal', defaultValue: 'clean', description: 'selecting maven goal')
     }
     stages {
         stage ('vcs') {
+            agent{
+               label 'ubuntu1'
+            }
             steps {
                 git branch: "${params.Branch_Name}",
                     url: 'https://github.com/spring-projects/spring-petclinic.git' 
             }
         }
         stage ('package') {
+            agent{
+               label 'ubuntu1'
+            }
             steps {
                 withSonarQubeEnv('sonarqube') {
                     sh "mvn  ${params.maven_goal} sonar:sonar"
@@ -25,11 +29,17 @@ pipeline {
             }
         }
         stage ('post build') {
+            agent{
+                label 'ubuntu1'
+            }
             steps {
                 archiveArtifacts artifacts: '**/target/*.jar'
             }
         }
         stage ('Artifactory configuration') {
+            agent{
+                label 'ubuntu1'
+            }
             steps {
                     rtMavenDeployer (
                     id: "jfrog-deployer-id",
@@ -40,9 +50,12 @@ pipeline {
             }
         }
         stage ('Exec Maven') {
+            agent{
+                label 'ubuntu1'
+            }
             steps {
                 rtMavenRun (
-                    tool: 'maven', // Tool name from Jenkins configuration
+                    tool: 'maven', 
                     pom: 'pom.xml',
                     goals: "${params.maven_goal}",
                     deployerId: "jfrog-deployer-id"
@@ -50,11 +63,25 @@ pipeline {
             }
         }
         stage ('Publish build info') {
+            agent{
+                label 'ubuntu1'
+            }
             steps {
                 rtPublishBuildInfo (
                     serverId: "jfrog-server-id"
                 )
             } 
+        }
+        stage('deploy'){
+            agent{
+                label 'ansible'
+            }
+            steps{
+                sh """
+                      ansible -i ./ansible/hosts.yaml -m ping all
+                      ansible-playbook -i ./ansible/hosts.yaml ./ansible/spc.yaml
+                    """  
+            }
         }
     }
     post{

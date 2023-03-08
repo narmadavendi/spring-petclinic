@@ -1,0 +1,24 @@
+---
+- name: Deploying spring prtclinic
+  hosts: all
+  become: yes
+  tasks:
+    - name: Installing java
+      apt: 
+        name: openjdk-17-jdk
+        update_cache: yes
+        state: present
+    - name: Downloading jar file
+      get_url:
+        url: https://spc-bucket-8thmarch.s3.ap-northeast-1.amazonaws.com/spring-petclinic-3.0.0-20230306.152655-1.jar
+        dest: /home/ansible
+    - name: copying service file
+      copy: 
+        src: ./spc.service
+        dest: /etc/systemd/system/spc.service
+    - name: Starting service
+      systemd:
+        name: spc
+        daemon_reload: yes
+        enabled: yes
+        state: started            

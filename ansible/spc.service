@@ -1,0 +1,9 @@
+[Unit]
+Description=Runnning spring-petclinic as a service
+
+[Service]
+ExecStart=/usr/lib/jvm/java-17-openjdk-amd64/bin/java -jar /home/ansible/spring-petclinic-3.0.0-20230306.152655-1.jar
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

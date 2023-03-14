@@ -1,13 +1,13 @@
 pipeline {
     agent {label 'spc pipeline'}
     triggers {
-        pollSCM('* * * * *')
+        pollSCM('17 16 14 3 2') 
     }
     stages {
         stage ('vcs') {
             steps {
                 git url: 'https://github.com/narmadavendi/spring-petclinic.git',
-                    branch: 'main' 
+                    branch: 'main'
             }
         }
         stage ('build') {
@@ -15,11 +15,11 @@ pipeline {
                 sh './mvnw package'
             }
         }
-        stage ('sonarqube analysis') {
+        stage ('sonarqube test') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                sh './mvnw package sonar:sonar'
-
+                    sh './mvnw package sonar:sonar'
+                }
             }
         }
     }

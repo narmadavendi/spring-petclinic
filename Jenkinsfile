@@ -1,7 +1,7 @@
 pipeline {
     agent {label 'spc pipeline'}
     triggers {
-        pollSCM('17 16 14 3 2') 
+        pollSCM('* * * * *') 
     }
     stages {
         stage ('vcs') {
@@ -18,7 +18,7 @@ pipeline {
         stage ('sonarqube test') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh './mvnw package sonar:sonar'
+                    sh 'mvn clean package sonar:sonar'
                 }
             }
         }

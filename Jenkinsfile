@@ -18,7 +18,7 @@ pipeline {
         stage ('sonarqube test') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh 'mvn clean package sonar:sonar'
+                    sh 'mvn clean package sonar:sonar -Dsonar.projectkey=narmada'
                 }
             }
         }

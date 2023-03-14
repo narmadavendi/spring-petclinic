@@ -15,5 +15,12 @@ pipeline {
                 sh './mvnw package'
             }
         }
+        stage ('sonarqube analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                sh 'mvn clean package sonar:sonar'
+
+            }
+        }
     }
 }

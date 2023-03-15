@@ -27,17 +27,17 @@ pipeline {
                 rtMavenDeployer (
                     id: "jfrog-deployer",
                     serverId: "jfrog-server-id",
-                    releaseRepo: "libs_release_local",
-                    snapshotRepo: "libs_snapshot_local"
+                    releaseRepo: 'libs_release_local',
+                    snapshotRepo: 'libs_snapshot_local'
                 )
             }
         }
         stage ('Exec Maven') {
             steps {
                 rtMavenRun (
-                    tool: "MAVEN",
-                    pom: "pom.xml",
-                    goals: "clean install",
+                    tool: 'MAVEN',
+                    pom: 'pom.xml',
+                    goals: 'clean install',
                     deployerId: "jfrog-deployer"
                 )
             }

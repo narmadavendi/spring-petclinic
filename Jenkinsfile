@@ -1,7 +1,7 @@
 pipeline {
-    agent {label 'spc pipeline'}
+    agent {label 'petclinic'}
     triggers {
-        pollSCM('* * * * *') 
+        pollSCM('* * * * *')
     }
     stages {
         stage ('vcs') {
@@ -13,13 +13,6 @@ pipeline {
         stage ('build') {
             steps {
                 sh './mvnw package'
-            }
-        }
-        stage ('sonarqube test') {
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh 'mvn clean package sonar:sonar -Dsonar.projectkey=narmada'
-                }
             }
         }
     }

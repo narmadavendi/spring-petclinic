@@ -1,5 +1,5 @@
 pipeline {
-    agent {label 'petclinic'}
+    agent {label 'spc pipeline'}
     triggers {
         pollSCM('* * * * *')
     }

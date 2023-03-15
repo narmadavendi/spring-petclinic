@@ -14,7 +14,7 @@ pipeline {
             steps {
                 sh './mvnw package'
             }
-        }
+        } 
         stage ('sonarqube tests') {
             steps {
                 withSonarQubeEnv('sonarqube') {
@@ -22,5 +22,31 @@ pipeline {
                 }
             }
         }
+        stage ('artifactory configauration') {
+            steps {
+                rtMavenDeployer (
+                    id: "JFROG_DEPLOYER",
+                    serverId: "JFROG_SERVER_ID",
+                    releaseRepo: LIBS_RELEASE_LOCAL,
+                    snapshotRepo: LIBS-SNAPSHOT-LOCAL
+                )
+            }
+        }
+        stage ('Exec Maven') {
+            steps {
+                rtMavenRun (
+                    pom: 'maven-examples/maven-example/pom.xml/',
+                    goals: 'clean install',
+                    deployerId: "JFROG_DEPLOYER"
+                )
+            }
+        }
+        stage ('Publish build info') {
+            steps {
+                rtPublishBuildInfo (
+                    serverId: "JFROG_SERVER_ID" 
+                )
+            }    
+        }
     }
-}
+}        

@@ -18,7 +18,7 @@ pipeline {
         stage ('sonarqube tests') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh './mvnw package sonar:sonar'
+                    sh 'mvn clean package sonar:sonar'
                 }
             }
         }

@@ -25,7 +25,7 @@ pipeline {
         stage ('Artifactory configauration') {
             steps {
                 rtMavenDeployer (
-                    id: "jfrog_deployer_id",
+                    id: "jfrog_deployer",
                     serverId: "jfrog_server_id",
                     releaseRepo: "libs_release_local",
                     snapshotRepo: "libs_snapshot_local"
@@ -36,8 +36,8 @@ pipeline {
             steps {
                 rtMavenRun (
                     tool: 'maven',
-                    pom: 'pom.xml/',
-                    goals: "maven clean install",
+                    pom: 'pom.xml',
+                    goals: "clean install",
                     deployerId: "jfrog_deployer"
                 )
             }

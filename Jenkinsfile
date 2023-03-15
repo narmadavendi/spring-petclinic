@@ -18,7 +18,7 @@ pipeline {
         stage ('sonarqube tests') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh 'mvn clean package sonar:sonar -Dsonar.login=squ_3a0589dac9e9582389930564adb1913503845152'
+                    sh 'mvn clean package sonar:sonar -Dsonar.login=squ_9c779fb4f605509fedf611b88e95db5f192d595a'
                 }
             }
         }

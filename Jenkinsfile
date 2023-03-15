@@ -35,7 +35,7 @@ pipeline {
         stage ('Exec Maven') {
             steps {
                 rtMavenRun (
-                    tool: 'maven',
+                    tool: 'MAVEN',
                     pom: 'pom.xml',
                     goals: "clean install",
                     deployerId: "jfrog_deployer"

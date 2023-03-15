@@ -22,13 +22,13 @@ pipeline {
                 }
             }
         }
-        stage ('artifactory configauration') {
+        stage ('Artifactory configauration') {
             steps {
                 rtMavenDeployer (
-                    id: "JFROG_DEPLOYER",
-                    serverId: "JFROG_SERVER_ID",
-                    releaseRepo: "LIBS_RELEASE_LOCAL",
-                    snapshotRepo: "LIBS-SNAPSHOT-LOCAL"
+                    id: "jfrog_deployer_id",
+                    serverId: "jfrog_server_id",
+                    releaseRepo: "libs_release_local",
+                    snapshotRepo: "libs_snapshot_local"
                 )
             }
         }
@@ -38,14 +38,14 @@ pipeline {
                     tool: 'maven',
                     pom: 'pom.xml/',
                     goals: "maven clean install",
-                    deployerId: "JFROG_DEPLOYER"
+                    deployerId: "jfrog_deployer"
                 )
             }
         }
         stage ('Publish build info') {
             steps {
                 rtPublishBuildInfo (
-                    serverId: "JFROG_SERVER_ID" 
+                    serverId: "jfrog_server_id" 
                 )
             }    
         }

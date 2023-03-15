@@ -38,16 +38,16 @@ pipeline {
                     tool: "MAVEN",
                     pom: "pom.xml",
                     goals: "clean install",
-                    deployerId: "jfrog_deployer"
+                    deployerId: "jfrog-deployer"
                 )
             }
         }
         stage ('Publish build info') {
             steps {
                 rtPublishBuildInfo (
-                    serverId: "jfrog-server-id" 
+                    serverId: "jfrog-server-id"
                 )
-            }    
-        }
+            }
+        }        
     }
 }        

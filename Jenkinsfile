@@ -35,8 +35,8 @@ pipeline {
         stage ('Exec Maven') {
             steps {
                 rtMavenRun (
-                    tool: 'MAVEN',
-                    pom: 'pom.xml',
+                    tool: "MAVEN",
+                    pom: "pom.xml",
                     goals: "clean install",
                     deployerId: "jfrog_deployer"
                 )
@@ -45,7 +45,7 @@ pipeline {
         stage ('Publish build info') {
             steps {
                 rtPublishBuildInfo (
-                    serverId: "jfrog_server_id" 
+                    serverId: "jfrog-server-id" 
                 )
             }    
         }

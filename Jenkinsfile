@@ -27,16 +27,17 @@ pipeline {
                 rtMavenDeployer (
                     id: "JFROG_DEPLOYER",
                     serverId: "JFROG_SERVER_ID",
-                    releaseRepo: LIBS_RELEASE_LOCAL,
-                    snapshotRepo: LIBS-SNAPSHOT-LOCAL
+                    releaseRepo: "LIBS_RELEASE_LOCAL",
+                    snapshotRepo: "LIBS-SNAPSHOT-LOCAL"
                 )
             }
         }
         stage ('Exec Maven') {
             steps {
                 rtMavenRun (
-                    pom: 'maven-examples/maven-example/pom.xml/',
-                    goals: 'clean install',
+                    tool: 'maven',
+                    pom: 'pom.xml/',
+                    goals: "maven clean install",
                     deployerId: "JFROG_DEPLOYER"
                 )
             }

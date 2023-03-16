@@ -10,15 +10,15 @@ pipeline {
                     branch: 'main'
             }
         }
-        stage ('build') {
-            steps {
-                sh './mvnw package'
-            }
-        } 
+        // stage ('build') {
+        //     steps {
+        //         sh './mvnw package'
+        //     }
+        // } 
         stage ('sonarqube tests') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh 'mvn clean package sonar:sonar '
+                    sh 'mvn clean package sonar:sonar'
                 }
             }
         }
